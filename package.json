@@ -21,7 +21,19 @@
 		"url": "https://github.com/Modubot/Modubot.js.git"
 	},
 	"dependencies": {
-		"irc": ">= 0.3.5"
+		"irc": ">= 0.3.5",
+		"js-yaml": "*",
+		"sandbox": ">= 0.8.3",
+		"moment": ">= 2.1.0",
+		"express": "3.x",
+		"jade": "*",
+		"youtube-feeds": "~2.2.1",
+		"get-youtube-id": "~0.1.3",
+		"mongoose": "~3.6.19",
+		"feedsub": "~0.2.6",
+		"wolfram": "~0.2.6",
+		"google": "~0.3.2",
+		"weather": "~0.1.0"
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",

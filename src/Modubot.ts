@@ -1,3 +1,6 @@
-import Modubot = require("Modubot/Bot");
+///<reference path="Modubot/Bot.ts"/>
 
-var modubot = new Modubot('config');
+import Modu = require('Modubot/Bot');
+var Modubot = new Modu.Bot('test');
+
+Modubot.spawn();
