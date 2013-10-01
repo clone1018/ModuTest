@@ -147,11 +147,7 @@ export class Bot {
 		}
 	}
 
-	reply(from, to, reply, type) {
-		if (!type) {
-			type = 'privmsg';
-		}
-
+	reply(from, to, reply, type = 'privmsg') {
 		switch (type) {
 			case 'privmsg':
 				if (to.charAt(0) == '#') {
@@ -167,11 +163,7 @@ export class Bot {
 		}
 	}
 
-	hasPermission(from, to, mode, notice) {
-		if (typeof notice == 'undefined') {
-			notice = true;
-		}
-
+	hasPermission(from, to, mode, notice:boolean = true) {
 		var modes = ['', '+', '%', '@', '&', '~'];
 
 		if (to.charAt(0) !== '#') {
