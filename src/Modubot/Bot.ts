@@ -9,9 +9,10 @@ import yaml = require('js-yaml');
 import mongoose = require('mongoose');
 import irc = require('irc');
 import Plugin = require('Plugin');
-var plugin = new Plugin.Plugin();
 
 export class Bot {
+
+	PluginManager: Plugin.Plugin;
 
 	configDir: string;
 
@@ -23,6 +24,9 @@ export class Bot {
 
 	constructor(configDir: string) {
 		this.configDir = configDir;
+
+		// Load Our Stuff
+		this.PluginManager = new Plugin.Plugin();
 
 
 		var defaultConfigPath = path.join(configDir, 'default.config.yml');
@@ -98,9 +102,12 @@ export class Bot {
 			password: config.network.password
 		});
 
-		config.plugins.forEach(function (p) {
-			plugin.load(this, p);
-		}, this);
+		if(config.plugins !== null) {
+			config.plugins.forEach(function (p) {
+				this.PluginManager.load(this, p);
+			}, this);
+		}
+
 
 		this.client.addListener('message', function (from, to, message) {
 			if (message.charAt(0) == config.bot.command) {
@@ -130,6 +137,57 @@ export class Bot {
 				console.log('error: ', message);
 			}
 		});
+	}
+
+	getReplyTo(from, to) {
+		if (to.charAt(0) == '#') {
+			return to;
+		} else {
+			return from;
+		}
+	}
+
+	reply(from, to, reply, type) {
+		if (!type) {
+			type = 'privmsg';
+		}
+
+		switch (type) {
+			case 'privmsg':
+				if (to.charAt(0) == '#') {
+					this.client.say(to, from + ': ' + reply);
+				} else {
+					this.client.say(from, reply);
+				}
+				break;
+
+			case 'notice':
+				this.client.notice(from, reply);
+				break;
+		}
+	}
+
+	hasPermission(from, to, mode, notice) {
+		if (typeof notice == 'undefined') {
+			notice = true;
+		}
+
+		var modes = ['', '+', '%', '@', '&', '~'];
+
+		if (to.charAt(0) !== '#') {
+			return true;
+		}
+		if (!this.client.chans.hasOwnProperty(to)) {
+			return false;
+		}
+
+		var hasPermission = modes.indexOf(this.client.chans[to].users[from]) >= modes.indexOf(mode);
+
+		if (notice && !hasPermission) {
+			this.reply(from, to, 'You are not authorized to do that.', 'notice');
+		}
+
+		return hasPermission;
 	}
 
 }
