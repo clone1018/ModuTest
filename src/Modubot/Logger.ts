@@ -12,7 +12,7 @@ export class Logger {
 	}
 
 	debug(...args) {
-		this.log('debug', args);
+		this.log('info', args);
 	}
 
 	info(...args) {

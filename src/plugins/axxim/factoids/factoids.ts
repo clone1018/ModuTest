@@ -1,10 +1,4 @@
 export class Plugin {
-	name:string;
-	title:string;
-	description:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	config:any;
 	database:any;
@@ -16,12 +10,6 @@ export class Plugin {
 	Factoid:any;
 
 	constructor(bot:any, config:any) {
-		this.name = 'factoids';
-		this.title = 'Factoids';
-		this.description = "Factoid module for Modubot";
-		this.version = '0.3';
-		this.author = 'Luke Strickland';
-
 		this.bot = bot;
 		this.config = config;
 		this.database = bot.database;
