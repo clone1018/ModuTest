@@ -4,6 +4,12 @@
 	"title": "Factoids",
 	"description": "Factoid module for Modubot",
 	"version": "0.3",
-	"author": "Luke Strickland"
+	"author": "Luke Strickland",
+	"requires": {
+
+	},
+	"nodeRequires": {
+
+	}
 
 }

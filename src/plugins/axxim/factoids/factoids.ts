@@ -1,3 +1,6 @@
+import FactoidClass = require('Factoid');
+var Factoid = FactoidClass.Factoid;
+
 export class Plugin {
 	bot:any;
 	config:any;
@@ -21,16 +24,8 @@ export class Plugin {
 			'f': 'onCommandForget'
 		};
 
-		this.factoidSchema = this.database.Schema({
-			factoid: String,
-			content: String,
-			owner: String,
-			channel: String,
-			forgotten: {type: Boolean, default: false},
-			locked:  {type: Boolean, default: false},
-			createdAt: {type: Date, default: Date.now}
-		});
-		this.Factoid = this.database.model('Factoid', this.factoidSchema);
+		var factoidSchema = this.database.Schema(Factoid.generateMongooseSchema());
+		this.Factoid = this.database.model('Factoid', factoidSchema);
 	}
 
 	onCommandForget(from:string, to:string, message:string, args:any) {
@@ -43,13 +38,12 @@ export class Plugin {
 		var factoidName = args[1].toLowerCase();
 
 		this.Factoid.findOne({ factoid: factoidName, locked: false })
-		.sort('-createdAt')
-		.remove(function(err) {
-			if (err) {
-				this.bot.config.bot.debug && console.log(err);
-				return;
-			}
-		});
+			.sort('-createdAt')
+			.remove(function(err) {
+				if (err) {
+					this.bot.config.bot.debug && console.log(err);
+				}
+			});
 	}
 
 	onCommandRemember(from:string, to:string, message:string, args:any) {
@@ -69,6 +63,13 @@ export class Plugin {
 				plugin.bot.reply(from, to, err, 'notice');
 				return;
 			}
+
+			var factoid = new Factoid();
+			factoid.factoid = factoidName;
+			factoid.content = contents;
+			factoid.owner = from;
+			factoid.channel = (to.charAt(0) == '#' ? to : '');
+			factoid.save();
 
 			var factoid = new plugin.Factoid({
 				factoid: factoidName,

@@ -39,8 +39,7 @@ export class Plugin {
 
 		var name = namespace.split('/')[1];
 
-		this.unload(bot, namespace);
-
+		var pluginConfig = this.loadConfiguration(namespace, name);
 
 		// Load the plugin
 		var pluginFile = require('../plugins/' + namespace + '/' + name);
@@ -75,5 +74,36 @@ export class Plugin {
 			return typeof object[property] == 'function';
 		});
 	}
+
+	private loadConfiguration(namespace:string, plugin:string): PluginConfig {
+		var pluginConfig = new PluginConfig();
+		var configFile = require('../plugins/' + namespace + '/' + name + '/plugin.json');
+
+		pluginConfig.name = '';
+
+		return pluginConfig;
+	}
+
 }
 
+class PluginConfig {
+	name: string;
+	title: string;
+	description: string;
+	version: string;
+	author: string;
+	requires: any;
+	nodeRequires: any;
+}
+
+/*
+interface PluginConfig {
+	name: string;
+	title: string;
+	description: string;
+	version: string;
+	author: string;
+	requires: any;
+	nodeRequires: any;
+}
+*/
