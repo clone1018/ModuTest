@@ -9,10 +9,12 @@ import yaml = require('js-yaml');
 import mongoose = require('mongoose');
 import irc = require('irc');
 import Plugin = require('Plugin');
+import Logger = require('Logger');
 
 export class Bot {
 
 	PluginManager: Plugin.Plugin;
+	Logger: any;
 
 	configDir: string;
 
@@ -27,6 +29,7 @@ export class Bot {
 
 		// Load Our Stuff
 		this.PluginManager = new Plugin.Plugin();
+		this.Logger = new Logger.Logger();
 
 
 		var defaultConfigPath = path.join(configDir, 'default.config.yml');
@@ -46,7 +49,7 @@ export class Bot {
 			// Need to copy the file in sync so we can safely process.exit below
 			fs.writeFileSync(localConfigPath, fs.readFileSync(defaultConfigPath));
 
-			console.info('Local config not found, copied default to config/config.yml');
+			this.Logger.error('Local config not found, copied default to config/config.yml');
 
 			process.exit();
 		}
@@ -71,8 +74,6 @@ export class Bot {
 			}
 		});
 
-		console.log(defaultConfig);
-
 		this.config = defaultConfig;
 		this.plugins = this.config.plugins;
 		this.hooks = [];
@@ -80,18 +81,20 @@ export class Bot {
 
 	spawn() {
 		var config = this.config;
+		var Logger = this.Logger;
 
 		this.database = mongoose;
 		mongoose.connect(config.database.mongodb);
 		var db = mongoose.connection;
+
 		db.on('error', function(err){
-			console.log('Could not establish MongoDB connection:' + err);
+			Logger.error('Could not establish MongoDB connection:' + err);
 		});
 		db.on('open', function(test){
-			console.log('Connected to MongoDB');
+			Logger.debug('Connected to MongoDB');
 		});
 
-		console.log('Connecting to ' + config.network.host + ':' + config.network.port);
+		Logger.debug('Connecting to ' + config.network.host + ':' + config.network.port);
 
 		this.client = new irc.Client(config.network.host, config.network.nick, {
 			port: config.network.port,
@@ -118,24 +121,18 @@ export class Bot {
 		});
 
 		this.client.addListener('raw', function (raw) {
-			if (config.bot.debug) {
-				console.log(Math.round(new Date().getTime() / 1000) + ' ' + raw.rawCommand + ' ' + raw.args.join(' '));
-			}
+			Logger.debug(Math.round(new Date().getTime() / 1000) + ' ' + raw.rawCommand + ' ' + raw.args.join(' '));
 		});
 
 		this.client.addListener('join', function (channel, nick, message) {
-			if (config.bot.debug) {
-				console.log('Joined Channel: ', channel);
-			}
+			Logger.debug('Joined Channel: ', channel);
 		});
 
 		/**
 		 * Sends errors to plugins and if debug show them
 		 */
 		this.client.addListener('error', function (message) {
-			if (config.bot.debug) {
-				console.log('error: ', message);
-			}
+			Logger.debug('error: ', message);
 		});
 	}
 

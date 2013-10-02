@@ -7,10 +7,10 @@ module.exports = function (grunt) {
 				dest: 'bin',
 				options: {
 					module: 'commonjs', //or commonjs
-					target: 'es3', //or es3
+					target: 'es5', //or es3
 					base_path: 'src',
 					sourcemap: true,
-					fullSourceMapPath: true,
+					fullSourceMapPath: false,
 					declaration: true
 				}
 			}
