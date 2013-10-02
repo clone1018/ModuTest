@@ -12,13 +12,17 @@ export class Logger {
 	}
 
 	debug(...args) {
+		this.log('debug', args);
+	}
+
+	info(...args) {
 		this.log('info', args);
 	}
 
 	log(type:string, ...args) {
 		var timestamp = Math.round((new Date()).getTime() / 1000);
 
-		console[type]('[' + timestamp + ']', JSON.stringify(args));
+		console[type]('[' + timestamp + ']', args);
 	}
 
 }

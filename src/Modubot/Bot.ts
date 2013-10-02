@@ -121,18 +121,18 @@ export class Bot {
 		});
 
 		this.client.addListener('raw', function (raw) {
-			Logger.debug(Math.round(new Date().getTime() / 1000) + ' ' + raw.rawCommand + ' ' + raw.args.join(' '));
+			Logger.debug(raw.rawCommand + ' ' + raw.args.join(' '));
 		});
 
 		this.client.addListener('join', function (channel, nick, message) {
-			Logger.debug('Joined Channel: ', channel);
+			Logger.info('Joined Channel: ', channel);
 		});
 
 		/**
 		 * Sends errors to plugins and if debug show them
 		 */
 		this.client.addListener('error', function (message) {
-			Logger.debug('error: ', message);
+			Logger.error('error: ', message);
 		});
 	}
 
