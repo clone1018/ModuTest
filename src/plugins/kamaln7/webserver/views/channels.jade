@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  div
+    div.row
+      div.col-md-12
+        table.table.table-striped
+          thead
+            tr
+              th Channel
+              th Mode
+              th Topic
+          tfoot
+            tr
+              th Total:
+              td= Object.keys(bot.client.chans).length
+              td
+          tbody
+            each channel in bot.client.chans
+              tr
+                td= channel.key
+                td= channel.mode
+                td= channel.topic

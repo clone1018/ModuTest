@@ -1,0 +1,22 @@
+div.navbar.navbar-default
+  div.navbar-header
+    button.navbar-toggle(type='button', data-toggle='collapse', data-target='.navbar-collapse')
+      span.icon-bar
+      span.icon-bar
+      span.icon-bar
+    a.navbar-brand(href='https://modubot.net') Modubot
+  div.navbar-collapse.collapse
+    ul.nav.navbar-nav
+      li(class=(menu === 'home' ? 'active' : ''))
+        a(href='/') Home
+      li(class=(menu === 'channels' ? 'active' : ''))
+        a(href='/channels') Channels
+      if(!!~plugins.indexOf('factoids'))
+        li(class=(menu === 'factoids' ? 'active' : ''))
+          a(href='/factoids') Factoids
+      if(!!~plugins.indexOf('logger'))
+        li(class=(menu === 'logger' ? 'active' : ''))
+          a(href='/logger') Logger
+    ul.nav.navbar-nav.pull-right
+      li
+        a(href='#')= bot.client.nick + ' on ' + bot.client.opt.server
