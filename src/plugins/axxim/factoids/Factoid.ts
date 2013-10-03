@@ -35,20 +35,14 @@ export class Factoid {
 	}
 	*/
 
-	save():any {
+	save(cb: any):any {
 		// Create a new database entry for this factoid
 		var factoid = new this.DatabaseFactoid({
 			factoid: this.factoid,
 			content: this.content,
 			owner: this.owner
 		});
-		factoid.save(function saveFactoid(err, factoid){
-			if(err){
-				return err;
-			}
-
-			return true;
-		});
+		factoid.save(cb);
 	}
 
 	generateMongooseSchema() {

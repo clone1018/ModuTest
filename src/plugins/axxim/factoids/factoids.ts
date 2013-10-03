@@ -62,15 +62,14 @@ export class Plugin {
 		factoid.owner = from;
 		factoid.channel = (to.charAt(0) == '#' ? to : '');
 
-		var saveResponse = factoid.save();
+		var plugin = this;
+		factoid.save(function saveFactoid(err, factoid) {
+			if(err) {
+				plugin.bot.reply(from, to, err);
+			}
 
-		console.log(saveResponse);
-
-		if(saveResponse === true) {
-			this.bot.reply(from, to, 'Added: ' + factoidName + '.', 'notice');
-		} else {
-			this.bot.reply(from, to, saveResponse);
-		}
+			plugin.bot.reply(from, to, 'Added: ' + factoidName + '.', 'notice');
+		});
 	}
 
 	/**
