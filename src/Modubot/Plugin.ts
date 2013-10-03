@@ -39,7 +39,9 @@ export class Plugin {
 
 		var name = namespace.split('/')[1];
 
-		var pluginConfig = this.loadConfiguration(namespace, name);
+		console.log(namespace, name);
+
+		var test = this.loadConfiguration(namespace);
 
 		// Load the plugin
 		var pluginFile = require('../plugins/' + namespace + '/' + name);
@@ -52,7 +54,7 @@ export class Plugin {
 				callback = bot.plugins[namespace][onEvent];
 
 			if (typeof callback == 'function') {
-				this.addPluginEvent(bot, namespace, event, callback);
+				this.PluginManager.addPluginEvent(bot, namespace, event, callback);
 				bot.config.bot.debug && console.log("Registered " + onEvent + " hook for " + namespace);
 			}
 		}, bot);
@@ -75,11 +77,18 @@ export class Plugin {
 		});
 	}
 
-	private loadConfiguration(namespace:string, plugin:string): PluginConfig {
+	private loadConfiguration(namespace:string) {
 		var pluginConfig = new PluginConfig();
-		var configFile = require('../plugins/' + namespace + '/' + name + '/plugin.json');
+		var configFile = require('../plugins/' + namespace + '/plugin.json');
 
-		pluginConfig.name = '';
+		pluginConfig.name = configFile.name;
+		pluginConfig.title = configFile.title;
+		pluginConfig.description = configFile.description;
+		pluginConfig.version = configFile.version;
+		pluginConfig.author = configFile.author;
+		pluginConfig.requires = configFile.requires;
+		pluginConfig.nodeRequires = configFile.nodeRequires;
+		pluginConfig.mainFile = configFile.mainFile || configFile.name;
 
 		return pluginConfig;
 	}
@@ -94,6 +103,7 @@ class PluginConfig {
 	author: string;
 	requires: any;
 	nodeRequires: any;
+	mainFile:any;
 }
 
 /*

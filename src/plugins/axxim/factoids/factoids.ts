@@ -23,9 +23,6 @@ export class Plugin {
 			'forget': 'onCommandForget',
 			'f': 'onCommandForget'
 		};
-
-		var factoidSchema = this.database.Schema(Factoid.generateMongooseSchema());
-		this.Factoid = this.database.model('Factoid', factoidSchema);
 	}
 
 	onCommandForget(from:string, to:string, message:string, args:any) {
@@ -57,35 +54,23 @@ export class Plugin {
 		var contents = args.splice(2);
 		contents = contents.join(' ').trim();
 
-		var plugin = this;
-		this.Factoid.update({factoid: factoidName, forgotten: false}, {$set: {forgotten: true}}, {multi: true}, function(err, numberAffected){
-			if(err){
-				plugin.bot.reply(from, to, err, 'notice');
-				return;
-			}
+		var factoid = new Factoid();
+		factoid.setDatabase(this.database);
 
-			var factoid = new Factoid();
-			factoid.factoid = factoidName;
-			factoid.content = contents;
-			factoid.owner = from;
-			factoid.channel = (to.charAt(0) == '#' ? to : '');
-			factoid.save();
+		factoid.factoid = factoidName;
+		factoid.content = contents;
+		factoid.owner = from;
+		factoid.channel = (to.charAt(0) == '#' ? to : '');
 
-			var factoid = new plugin.Factoid({
-				factoid: factoidName,
-				content: contents,
-				owner: from,
-				channel: (to.charAt(0) == '#' ? to : '')
-			});
-			factoid.save(function(err, factoid){
-				if(err){
-					plugin.bot.reply(from, to, err);
-					return;
-				}
+		var saveResponse = factoid.save();
 
-				plugin.bot.reply(from, to, (numberAffected ? 'Updated' : 'Created') + ' ' + factoidName + '.', 'notice');
-			});
-		});
+		console.log(saveResponse);
+
+		if(saveResponse === true) {
+			this.bot.reply(from, to, 'Added: ' + factoidName + '.', 'notice');
+		} else {
+			this.bot.reply(from, to, saveResponse);
+		}
 	}
 
 	/**

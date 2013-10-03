@@ -11,7 +11,11 @@ export class Factoid {
 	mongoose: any;
 	DatabaseFactoid: any;
 
-	constructor(database: any) {
+	constructor(factoid:string = '') {
+	}
+
+	setDatabase(database: any) {
+
 		this.mongoose = database;
 
 		var factoidSchema = this.mongoose.Schema(this.generateMongooseSchema());
@@ -31,19 +35,19 @@ export class Factoid {
 	}
 	*/
 
-	save() {
+	save():any {
 		// Create a new database entry for this factoid
 		var factoid = new this.DatabaseFactoid({
 			factoid: this.factoid,
 			content: this.content,
 			owner: this.owner
 		});
-		factoid.save(function(err, factoid){
+		factoid.save(function saveFactoid(err, factoid){
 			if(err){
 				return err;
 			}
 
-			return factoid;
+			return true;
 		});
 	}
 

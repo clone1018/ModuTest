@@ -14,12 +14,25 @@ module.exports = function (grunt) {
 					declaration: false
 				}
 			}
+		},
+		copy: {
+			main: {
+				files: [
+					{
+						expand: true,
+						cwd: 'src/plugins',
+						src: ['**'],
+						dest: 'bin/plugins/'
+					}
+				]
+			}
 		}
 	});
 
 	grunt.loadNpmTasks('grunt-typescript');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	// Default task(s).
-	grunt.registerTask('default', ['typescript']);
+	grunt.registerTask('default', ['typescript','copy']);
 
 };

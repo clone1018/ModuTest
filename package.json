@@ -37,7 +37,8 @@
 	},
 	"devDependencies": {
 		"grunt": "~0.4.1",
-		"grunt-typescript": "~0.2.4"
+		"grunt-typescript": "~0.2.4",
+		"grunt-contrib-copy": "~0.4.1"
 	},
 	"license": "BSD-3",
 	"engines": {
