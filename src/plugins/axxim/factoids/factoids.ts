@@ -45,7 +45,7 @@ export class Plugin {
 
 	onCommandRemember(from:string, to:string, message:string, args:any) {
 		if (args.length < 3) {
-			this.client.reply(from, to, '.remember <factoid> <text>', 'notice');
+			this.bot.reply(from, to, '.remember <factoid> <text>', 'notice');
 			return;
 		}
 
@@ -54,8 +54,7 @@ export class Plugin {
 		var contents = args.splice(2);
 		contents = contents.join(' ').trim();
 
-		var factoid = new Factoid();
-		factoid.setDatabase(this.database);
+		var factoid = new Factoid(this.database);
 
 		factoid.factoid = factoidName;
 		factoid.content = contents;
@@ -85,13 +84,16 @@ export class Plugin {
 		if (this.isFactoid(message)) {
 			var factoidName = message.split(' ')[0].replace(this.config.command, '').toLowerCase();
 
-			this.Factoid.findOne({factoid: factoidName, forgotten: false}, (function(err, factoid){
+			var factoid = new Factoid(this.database);
+			var plugin = this;
+
+			factoid.active(factoidName, (function(err, factoid) {
 				if(err){
-					this.bot.reply(from, to, err, 'notice');
+					plugin.bot.reply(from, to, err, 'notice');
 					return;
 				}
 
-				if(!factoid){
+				if(!factoid) {
 					return;
 				}
 
@@ -109,18 +111,18 @@ export class Plugin {
 					special = special[1];
 					switch(special){
 						case 'alias':
-							this.onMessage(from, to, this.config.command + content);
+							plugin.onMessage(from, to, this.config.command + content);
 							break;
 						case 'cmd':
 							var args = content.split(' ');
 							var command = args.shift();
 
 							// TODO: Improve this
-							this.client.emit('command.' + command, from, to, this.bot.config.command + command + ' ' + args.join(' ') + ' ' + message.replace(new RegExp('/^' + this.config.command.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + factoidName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + '[ ]?/i'), ''));
+							plugin.client.emit('command.' + command, from, to, plugin.bot.config.command + command + ' ' + args.join(' ') + ' ' + message.replace(new RegExp('/^' + plugin.config.command.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + factoidName.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&") + '[ ]?/i'), ''));
 							break;
 					}
 				} else {
-					this.client.say(this.bot.getReplyTo(from, to), prefix + factoid.content);
+					plugin.client.say(plugin.bot.getReplyTo(from, to), prefix + factoid.content);
 				}
 			}).bind(this));
 		}

@@ -45,7 +45,7 @@ export class Plugin {
 
 		// Load the plugin
 		var pluginFile = require('../plugins/' + namespace + '/' + name);
-		var pluginConfig = bot.config.plugin[name] || {};
+		var pluginConfig = bot.config.plugin[namespace] || {};
 		bot.plugins[namespace] = new pluginFile.Plugin(bot, pluginConfig);
 
 		// Load the hooks

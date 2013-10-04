@@ -1,43 +1,59 @@
 export class Factoid {
 
-	factoid: string;
-	content: string;
-	owner: string;
-	channel: string;
-	forgotten: boolean;
-	locked: boolean;
-	createdAt: string;
+	factoid:string;
+	content:string;
+	owner:string;
+	channel:string;
+	forgotten:boolean;
+	locked:boolean;
+	createdAt:string;
 
-	mongoose: any;
-	DatabaseFactoid: any;
+	mongoose:any;
+	database:any = false;
 
-	constructor(factoid:string = '') {
+	constructor(database:any) {
+		this.setDatabase(database);
 	}
 
-	setDatabase(database: any) {
-
+	setDatabase(database:any) {
 		this.mongoose = database;
 
-		var factoidSchema = this.mongoose.Schema(this.generateMongooseSchema());
-		this.DatabaseFactoid = this.mongoose.model('Factoid', factoidSchema);
+		var models = this.mongoose.modelSchemas;
+
+		// Make sure we dont make two models
+		if (models['Factoid'] === undefined) {
+			var factoidSchema = this.mongoose.Schema(this.generateMongooseSchema());
+			this.database = this.mongoose.model('Factoid', factoidSchema);
+		} else {
+			this.database = this.mongoose.model('Factoid');
+		}
 	}
 
-	/*
-	factoidObject() {
-		return {
-			factoid: this.factoid,
-			content: this.content,
-			owner: this.owner,
-			forgotten: this.forgotten,
-			locked: this.locked,
-			createdAt: this.createdAt
-		};
-	}
-	*/
+	active(factoid:string, cb:any) {
+		var query = this.database.findOne({
+			factoid: factoid,
+			forgotten: false
+		}).sort({createdAt: -1});
 
-	save(cb: any):any {
+		query.exec(cb);
+	}
+
+	history(factoid:string, cb:any) {
+		this.database.find({
+			factoid: factoid,
+			forgotten: false
+		}, cb);
+	}
+
+	forgetActive(factoid:string, cb:any) {
+		this.active(factoid, function forgetFactoid(err, factoid) {
+			// Forget here.
+		});
+	}
+
+	save(cb:any):any {
 		// Create a new database entry for this factoid
-		var factoid = new this.DatabaseFactoid({
+		var factoid = new this.database({
 			factoid: this.factoid,
 			content: this.content,
 			owner: this.owner
@@ -52,7 +68,7 @@ export class Factoid {
 			owner: String,
 			channel: String,
 			forgotten: {type: Boolean, default: false},
-			locked:  {type: Boolean, default: false},
+			locked: {type: Boolean, default: false},
 			createdAt: {type: Date, default: Date.now}
 		};
 	}
