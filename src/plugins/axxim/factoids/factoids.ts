@@ -150,7 +150,9 @@ export class Plugin {
 	}
 
 	getAllFactoids(callback){
-		this.Factoid.find({forgotten: false}, null, {sort: { factoid: 1 }}, callback);
+		var factoid = new Factoid(this.database);
+
+        factoid.findAll(callback);
 	}
 
 }

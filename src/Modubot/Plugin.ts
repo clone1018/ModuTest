@@ -45,6 +45,11 @@ export class Plugin {
 		var pluginConfig = bot.config.plugin[namespace] || {};
 		bot.plugins[namespace] = new pluginFile.Plugin(bot, pluginConfig);
 
+        // Merge the plugins config into the plugin class
+        for (var attrname in pConfig) {
+            bot.plugins[namespace][attrname] = pConfig[attrname];
+        }
+
 		// Load the hooks
 		['registered', 'motd', 'names', 'topic', 'join', 'part', 'quit', 'kick', 'kill', 'message', 'notice', 'ping', 'pm', 'ctcp', 'ctcpNotice', 'ctcpPrivmsg', 'ctcpVersion', 'nick', 'plusMode', 'minusMode', 'whois', 'channelistStart', 'channelistItem', 'channelList', 'raw', 'error'].forEach(function (event) {
 			var onEvent = 'on' + event.charAt(0).toUpperCase() + event.substr(1),

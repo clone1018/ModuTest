@@ -29,6 +29,10 @@ export class Factoid {
 		}
 	}
 
+    findAll(cb: any) {
+        this.database.find({forgotten: false}, null, {sort: { factoid: 1 }}, cb);
+    }
+
 	active(factoid:string, cb:any) {
 		var query = this.database.findOne({
 			factoid: factoid,

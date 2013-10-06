@@ -1,10 +1,4 @@
 export class Plugin {
-	name:string;
-	title:string;
-	description:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	database:any;
 	client:any;
@@ -15,12 +9,6 @@ export class Plugin {
 	plugins:any;
 
 	constructor(bot:any, config:any) {
-		this.name = 'webserver';
-		this.title = 'Webserver';
-		this.description = "Webserver module for Modubot";
-		this.version = '0.1';
-		this.author = 'Kamal Nasser';
-
 		this.bot = bot;
 		this.database = bot.database;
 		this.client = bot.client;

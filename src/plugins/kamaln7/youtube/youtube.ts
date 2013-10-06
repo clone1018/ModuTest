@@ -3,24 +3,12 @@ var getYouTubeID = require('get-youtube-id');
 var moment = require('moment');
 
 export class Plugin {
-	name:string;
-	title:string;
-	description:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	database:any;
 	client:any;
 	commands:any;
 
 	constructor(bot:any) {
-		this.name = 'youtube';
-		this.title = 'YouTube';
-		this.description = "Parse Youtube links and output information";
-		this.version = '0.1';
-		this.author = 'Kamal Nasser';
-
 		this.bot = bot;
 		this.database = bot.database;
 		this.client = bot.client;
