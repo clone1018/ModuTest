@@ -1,12 +1,6 @@
 var feedsub = require('feedsub');
 var moment = require('moment');
 export class Plugin {
-	name:string;
-	title:string;
-	description:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	database:any;
 	client:any;
@@ -16,12 +10,6 @@ export class Plugin {
 	readers:any;
 
 	constructor(bot:any, config:any) {
-		this.name = 'rss';
-		this.title = 'RSS';
-		this.description = "RSS module for Modubot";
-		this.version = '0.1';
-		this.author = 'Kamal Nasser';
-
 		this.bot = bot;
 		this.database = bot.database;
 		this.client = bot.client;
