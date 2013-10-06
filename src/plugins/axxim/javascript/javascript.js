@@ -1,11 +1,6 @@
 var Sandbox = require('sandbox');
 
 Plugin = exports.Plugin = function (bot) {
-	this.name = 'javascript';
-	this.title = 'JavaScript Eval';
-	this.version = '0.1';
-	this.author = 'Luke Strickland';
-
 	this.bot = bot;
 	this.client = bot.client;
 

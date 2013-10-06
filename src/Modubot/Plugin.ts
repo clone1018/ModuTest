@@ -35,16 +35,13 @@ export class Plugin {
 	}
 
 	load(bot, namespace) {
-		bot.config.bot.debug && console.log("Loading Plugin: " + namespace);
+		console.log("Loading Plugin: " + namespace);
 
 		var name = namespace.split('/')[1];
-
-		console.log(namespace, name);
-
-		var test = this.loadConfiguration(namespace);
+		var pConfig = this.loadConfiguration(namespace);
 
 		// Load the plugin
-		var pluginFile = require('../plugins/' + namespace + '/' + name);
+		var pluginFile = require('../plugins/' + namespace + '/' + pConfig.mainFile);
 		var pluginConfig = bot.config.plugin[namespace] || {};
 		bot.plugins[namespace] = new pluginFile.Plugin(bot, pluginConfig);
 
@@ -55,7 +52,7 @@ export class Plugin {
 
 			if (typeof callback == 'function') {
 				this.PluginManager.addPluginEvent(bot, namespace, event, callback);
-				bot.config.bot.debug && console.log("Registered " + onEvent + " hook for " + namespace);
+				console.log("Registered " + onEvent + " hook for " + namespace);
 			}
 		}, bot);
 

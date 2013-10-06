@@ -5,20 +5,10 @@ import http = require('http');
 
 export class Plugin {
 
-	name:string;
-	title:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	client:any;
 
 	constructor(bot:any) {
-		this.name = 'url';
-		this.title = 'URL';
-		this.version = '0.1';
-		this.author = 'Luke Strickland';
-
 		this.bot = bot;
 		this.client = bot.client;
 	}

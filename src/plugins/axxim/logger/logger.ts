@@ -1,10 +1,4 @@
 export class Plugin {
-	name:string;
-	title:string;
-	description:string;
-	version:string;
-	author:string;
-
 	bot:any;
 	database:any;
 	client:any;
@@ -15,12 +9,6 @@ export class Plugin {
 	Log:any;
 
 	constructor(bot:any) {
-		this.name = 'logger';
-		this.title = 'Logger';
-		this.description = "Logging module";
-		this.version = '0.2';
-		this.author = 'Luke Strickland';
-
 		this.bot = bot;
 		this.database = bot.database;
 

@@ -23,6 +23,7 @@ export class Plugin {
 			'forget': 'onCommandForget',
 			'f': 'onCommandForget'
 		};
+
 	}
 
 	onCommandForget(from:string, to:string, message:string, args:any) {
@@ -34,13 +35,13 @@ export class Plugin {
 		}
 		var factoidName = args[1].toLowerCase();
 
-		this.Factoid.findOne({ factoid: factoidName, locked: false })
-			.sort('-createdAt')
-			.remove(function(err) {
-				if (err) {
-					this.bot.config.bot.debug && console.log(err);
-				}
-			});
+
+		var factoid = new Factoid(this.database);
+		factoid.forgetActive(factoidName, function(err, factoid) {
+			if(err) {
+				console.error(err);
+			}
+		});
 	}
 
 	onCommandRemember(from:string, to:string, message:string, args:any) {

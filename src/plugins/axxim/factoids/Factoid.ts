@@ -46,8 +46,16 @@ export class Factoid {
 	}
 
 	forgetActive(factoid:string, cb:any) {
+		var database = this.database;
 		this.active(factoid, function forgetFactoid(err, factoid) {
-			// Forget here.
+			if(factoid.locked) {
+				return;
+			}
+
+			database.update(factoid, {
+				forgotten: true
+			}, cb);
+
 		});
 	}
 
